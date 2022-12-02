@@ -1,10 +1,10 @@
-import { Arg, Args, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Mutation, Query, Resolver } from 'type-graphql';
 import { CreateUserDto } from '@dtos/users.dto';
 import { User } from '@typedefs/users.type';
 import UserRepository from '@/repositories/users.repository';
 
 @Resolver()
-export class userResolver extends UserRepository {
+export class UserResolver extends UserRepository {
     @Query(() => [User], {
         description: 'List all Users',
     })
