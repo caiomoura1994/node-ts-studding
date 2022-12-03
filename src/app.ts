@@ -14,7 +14,6 @@ import http from 'http';
 import { json } from 'body-parser';
 
 const { NODE_ENV, PORT, ORIGIN, CREDENTIALS } = process.env;
-// import { authMiddleware, authChecker } from '@middlewares/auth.middleware';
 import errorMiddleware from '@middlewares/error.middleware';
 import { initializeMongo } from './databases/mongodb';
 import { authChecker, authMiddleware } from './middlewares/auth.middleware';
