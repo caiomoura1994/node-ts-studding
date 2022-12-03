@@ -1,4 +1,4 @@
-import { sign } from 'jsonwebtoken';
+const { sign } = require('jsonwebtoken');
 import { hash, compare } from 'bcrypt';
 import { IUser } from '@interfaces/users.interface';
 import { AppError } from '@/exceptions/AppError';
@@ -17,7 +17,7 @@ export default class AuthRepository {
     public async userSignUp(userData: CreateUserDto): Promise<IUser> {
         if (isEmpty(userData)) throw new AppError(400, "userData is empty");
 
-        const findUser: IUser = await UserModel.findOne({ where: { email: userData.email } });
+        const findUser: IUser = await UserModel.findOne({ email: userData.email });
         if (findUser) throw new AppError(409, `This email ${userData.email} already exists`);
 
         const hashedPassword = await hash(userData.password, 10);
@@ -25,7 +25,7 @@ export default class AuthRepository {
         return createUserData;
     }
 
-    public async userLogIn(userData: CreateUserDto): Promise<{ cookie: string; findUser: IUser }> {
+    public async userLogIn(userData: CreateUserDto): Promise<{ cookie: string; findUser: IUser, token: string, expiresIn: number }> {
         if (isEmpty(userData)) throw new AppError(400, "userData is empty");
 
         const findUser = await UserModel.findOne({ where: { email: userData.email } });
@@ -37,7 +37,7 @@ export default class AuthRepository {
         const tokenData = this.createToken(findUser);
         const cookie = this.createCookie(tokenData);
 
-        return { cookie, findUser };
+        return { cookie, findUser, token: tokenData.token, expiresIn: tokenData.expiresIn };
     }
 
     public async userLogOut(userId: number): Promise<IUser> {
@@ -50,11 +50,19 @@ export default class AuthRepository {
     }
 
     private createToken(user: IUser): { token: string, expiresIn: number } {
-        const dataStoredInToken = { id: user._id };
+        const dataStoredInToken = { _id: user._id };
         const secretKey: string = process.env.SECRET_KEY;
-        const expiresIn: number = 60 * 60;
-
-        return { expiresIn, token: sign(dataStoredInToken, secretKey, { expiresIn }) };
+        const expiresInOneHour: number = 60 * 60;
+        const token = sign(
+            dataStoredInToken,
+            secretKey,
+            // { expiresIn: expiresInOneHour }
+        )
+        console.log('token', token)
+        return {
+            expiresIn: expiresInOneHour,
+            token
+        };
     }
 
     private createCookie(tokenData: { token: string, expiresIn: number }): string {

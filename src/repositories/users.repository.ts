@@ -10,7 +10,7 @@ export default class UserRepository {
         this.userModel = UserModel;
     }
     public async userFindAll(): Promise<IUser[]> {
-        return await this.userModel.find().exec();
+        return await this.userModel.find();
     }
 
     public async userFindById(userId: String): Promise<IUser> {
@@ -40,11 +40,12 @@ export default class UserRepository {
         if (!findUser) throw new AppError(400, "User doesn't exist");
 
         const hashedPassword = await hash(userData.password, 10);
-        const updateUser = await this.userModel.findOneAndUpdate(
+        await this.userModel.findOneAndUpdate(
             { _id: userId },
             { $set: { ...userData, password: hashedPassword } }
         )
-        return updateUser;
+        const updatedUser = await this.userModel.findById(userId)
+        return updatedUser;
     }
 
     public async userDelete(userId: string): Promise<void> {

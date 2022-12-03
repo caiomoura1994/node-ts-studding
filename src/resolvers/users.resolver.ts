@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { CreateUserDto } from '@dtos/users.dto';
 import { UserType } from '@typedefs/users.type';
 import UserRepository from '@/repositories/users.repository';
@@ -9,7 +9,7 @@ export class UserResolver extends UserRepository {
         description: 'List all Users',
     })
     async allUsers(): Promise<UserType[]> {
-        return this.users
+        return this.userFindAll()
     }
     @Query(() => UserType, {
         description: 'UserType find list',
@@ -22,5 +22,12 @@ export class UserResolver extends UserRepository {
     })
     async createUser(@Arg('userInput') userInput: CreateUserDto): Promise<UserType> {
         return this.userCreate(userInput);
+    }
+    @Authorized()
+    @Mutation(() => UserType, {
+        description: 'UserType find list',
+    })
+    async updateUser(@Ctx('user') userId: string, @Arg('userInput') userInput: CreateUserDto): Promise<UserType> {
+        return this.userUpdate(userId, userInput);
     }
 }

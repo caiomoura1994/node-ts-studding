@@ -4,7 +4,7 @@ import { Field, ObjectType } from 'type-graphql';
 @ObjectType()
 export class UserType implements IUser {
   @Field()
-  _id: string;
+  _id?: string;
 
   @Field()
   email: string;

@@ -30,7 +30,7 @@ class App {
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
-    this.connectToDatabase();
+    initializeMongo();
     this.initializeMiddlewares();
     this.initApolloServer(resolvers);
     this.initializeErrorHandling();
@@ -48,10 +48,6 @@ class App {
 
   public getServer() {
     return this.app;
-  }
-
-  private connectToDatabase() {
-    return initializeMongo()
   }
 
   private initializeMiddlewares() {
