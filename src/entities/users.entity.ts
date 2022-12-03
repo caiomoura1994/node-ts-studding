@@ -1,7 +1,7 @@
-import { User } from "@/typedefs/users.type";
+import { IUser } from "@/interfaces/users.interface";
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
-class UserEntity implements User {
+class UserEntity implements IUser {
     @prop()
     public _id: string;
 
