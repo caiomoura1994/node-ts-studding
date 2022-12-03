@@ -17,6 +17,7 @@ const { NODE_ENV, PORT, ORIGIN, CREDENTIALS } = process.env;
 // import { authMiddleware, authChecker } from '@middlewares/auth.middleware';
 import errorMiddleware from '@middlewares/error.middleware';
 import { initializeMongo } from './databases/mongodb';
+import { authChecker, authMiddleware } from './middlewares/auth.middleware';
 // import { logger, responseLogger, errorLogger } from '@utils/logger';
 
 class App {
@@ -67,10 +68,7 @@ class App {
   }
 
   private async initApolloServer(resolvers) {
-    const schema = await buildSchema({
-      resolvers,
-      // authChecker,
-    });
+    const schema = await buildSchema({ resolvers, authChecker });
     const httpServer = http.createServer(this.app);
 
     const apolloServer = new ApolloServer({
@@ -79,14 +77,6 @@ class App {
       plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer })
       ],
-      // context: async ({ req }) => {
-      //   try {
-      //     const user = await authMiddleware(req);
-      //     return { user };
-      //   } catch (error) {
-      //     throw new Error(error);
-      //   }
-      // },
       // formatResponse: (response, request) => {
       //   responseLogger(request);
 
@@ -105,7 +95,10 @@ class App {
       cors<cors.CorsRequest>(),
       json(),
       expressMiddleware(apolloServer, {
-        context: async ({ req }) => ({ token: req.headers.token }),
+        context: async ({ req }) => {
+          const user = await authMiddleware(req);
+          return ({ token: req?.headers?.token, user })
+        },
       }),
     );
 
