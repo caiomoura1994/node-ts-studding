@@ -13,11 +13,10 @@ import { buildSchema } from 'type-graphql';
 import http from 'http';
 import { json } from 'body-parser';
 
-// import { createConnection } from 'typeorm';
 const { NODE_ENV, PORT, ORIGIN, CREDENTIALS } = process.env;
-// import { dbConnection } from '@databases';
 // import { authMiddleware, authChecker } from '@middlewares/auth.middleware';
 import errorMiddleware from '@middlewares/error.middleware';
+import { initializeMongo } from './databases/mongodb';
 // import { logger, responseLogger, errorLogger } from '@utils/logger';
 
 class App {
@@ -30,7 +29,7 @@ class App {
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
-    // this.connectToDatabase();
+    this.connectToDatabase();
     this.initializeMiddlewares();
     this.initApolloServer(resolvers);
     this.initializeErrorHandling();
@@ -50,9 +49,9 @@ class App {
     return this.app;
   }
 
-  // private connectToDatabase() {
-  //   createConnection(dbConnection);
-  // }
+  private connectToDatabase() {
+    return initializeMongo()
+  }
 
   private initializeMiddlewares() {
     if (this.env === 'production') {
