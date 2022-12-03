@@ -1,9 +1,10 @@
+import { IUser } from '@/interfaces/users.interface';
 import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
-export class User {
+export class UserType implements IUser {
   @Field()
-  id: number;
+  _id?: string;
 
   @Field()
   email: string;
