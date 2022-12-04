@@ -1,4 +1,4 @@
-const { sign } = require('jsonwebtoken');
+import { sign } from 'jsonwebtoken';
 import { hash, compare } from 'bcrypt';
 import { IUser } from '@interfaces/users.interface';
 import { AppError } from '@/exceptions/AppError';
@@ -40,7 +40,7 @@ export default class AuthRepository {
         return { cookie, findUser, token: tokenData.token, expiresIn: tokenData.expiresIn };
     }
 
-    public async userLogOut(userId: number): Promise<IUser> {
+    public async userLogOut(userId: string): Promise<IUser> {
         if (isEmpty(userId)) throw new AppError(400, "userId is empty");
 
         const findUser: IUser = await UserModel.findOne({ where: { id: userId } });
@@ -56,9 +56,8 @@ export default class AuthRepository {
         const token = sign(
             dataStoredInToken,
             secretKey,
-            // { expiresIn: expiresInOneHour }
+            { expiresIn: expiresInOneHour }
         )
-        console.log('token', token)
         return {
             expiresIn: expiresInOneHour,
             token

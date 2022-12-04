@@ -26,8 +26,8 @@ export class AuthResolver extends AuthRepository {
     @Mutation(() => UserType, {
         description: 'UserType logout',
     })
-    async logout(@Ctx('user') userData: any): Promise<UserType> {
-        const user = await this.userLogOut(userData);
+    async logout(@Ctx('user') userData: UserType): Promise<UserType> {
+        const user = await this.userLogOut(userData._id.toString());
         return user;
     }
 }

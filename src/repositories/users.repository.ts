@@ -13,7 +13,7 @@ export default class UserRepository {
         return await this.userModel.find();
     }
 
-    public async userFindById(userId: String): Promise<IUser> {
+    public async userFindById(userId: string): Promise<IUser> {
         if (!userId) throw new AppError(400, "UserId is empty");
 
         const user = await this.userModel.findById(userId);
@@ -33,7 +33,7 @@ export default class UserRepository {
         return createUserData;
     }
 
-    public async userUpdate(userId: String, userData: CreateUserDto): Promise<IUser> {
+    public async userUpdate(userId: string, userData: CreateUserDto): Promise<IUser> {
         if (!userData || !userId) throw new AppError(400, "userData is empty");
 
         const findUser: IUser = await this.userFindById(userId);
