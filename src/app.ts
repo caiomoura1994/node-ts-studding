@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 
 import cors from 'cors';
 import express from 'express';
-// import helmet from 'helmet';
+import helmet from 'helmet';
 // import hpp from 'hpp';
 import { buildSchema } from 'type-graphql';
 import http from 'http';
@@ -52,7 +52,7 @@ class App {
   private initializeMiddlewares() {
     if (this.env === 'production') {
       // this.app.use(hpp());
-      // this.app.use(helmet());
+      this.app.use(helmet());
     }
 
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
