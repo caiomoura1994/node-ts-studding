@@ -9,8 +9,8 @@ export class PaginationInput {
   @Field()
   limit: number;
 
-  @Field()
-  sortBy: string;
+  @Field({ nullable: true })
+  sortBy?: string;
 }
 
 

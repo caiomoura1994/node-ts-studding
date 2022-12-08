@@ -6,7 +6,7 @@ import { PaginationInput } from '@/dtos/pagination.input';
 
 @Resolver()
 export class UserResolver extends UserRepository {
-    @Query(() => [PaginatedUserType], {
+    @Query(() => PaginatedUserType, {
         description: 'List all Users with Filter',
     })
     async allUsersFilter(@Arg('paginationinput') paginationinput: PaginationInput): Promise<PaginatedUserType> {

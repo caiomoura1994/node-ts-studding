@@ -15,7 +15,7 @@ export default class UserRepository {
         const paginated = await query
             .skip(offset > 0 ? ((offset - 1) * limit) : 0)
             .limit(limit)
-        const total = await query.count()
+        const total = await this.userModel.find().count()
         return {
             users: paginated,
             offset: offset + limit,

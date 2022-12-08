@@ -16,6 +16,7 @@ export class UserType implements IUser {
 
 @ObjectType()
 export class PaginatedUserType extends PaginationType {
+  @Field(type => [UserType])
   users: UserType[];
 }
 
