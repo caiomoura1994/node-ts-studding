@@ -1,10 +1,18 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { CreateUserDto } from '@dtos/users.dto';
-import { UserType } from '@typedefs/users.type';
+import { PaginatedUserType, UserType } from '@typedefs/users.type';
 import UserRepository from '@/repositories/users.repository';
+import { PaginationInput } from '@/dtos/pagination.input';
 
 @Resolver()
 export class UserResolver extends UserRepository {
+    @Query(() => [PaginatedUserType], {
+        description: 'List all Users with Filter',
+    })
+    async allUsersFilter(@Arg('paginationinput') paginationinput: PaginationInput): Promise<PaginatedUserType> {
+        const { offset, limit, sortBy } = paginationinput;
+        return this.usersFilter(offset, limit, sortBy)
+    }
     @Query(() => [UserType], {
         description: 'List all Users',
     })

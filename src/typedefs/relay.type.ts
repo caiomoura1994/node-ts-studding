@@ -53,7 +53,7 @@ export function EdgeType<NodeType>(nodeName: string, nodeType: ClassType<NodeTyp
         cursor: Relay.ConnectionCursor;
     }
 
-    return Edge as unknown as typeof EdgeType;
+    return typeof Edge;
 }
 
 type ExtractNodeType<EdgeType> = EdgeType extends Relay.Edge<infer NodeType>

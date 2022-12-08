@@ -1,6 +1,6 @@
 import { hash } from 'bcrypt';
 import { CreateUserDto } from '@dtos/users.dto';
-import { IUser } from '@interfaces/users.interface';
+import { IUser, IUsersPaginated } from '@interfaces/users.interface';
 import { UserModel } from '@entities/users.entity';
 import { AppError } from '@/exceptions/AppError';
 
@@ -8,6 +8,20 @@ export default class UserRepository {
     userModel: typeof UserModel
     constructor() {
         this.userModel = UserModel;
+    }
+    public async usersFilter(offset: number, limit: number, sortBy: string): Promise<IUsersPaginated> {
+        let query = this.userModel.find()
+        if (sortBy) query = query.sort({ [sortBy]: 1 })
+        const paginated = await query
+            .skip(offset > 0 ? ((offset - 1) * limit) : 0)
+            .limit(limit)
+        const total = await query.count()
+        return {
+            users: paginated,
+            offset: offset + limit,
+            limit,
+            total
+        }
     }
     public async userFindAll(): Promise<IUser[]> {
         return await this.userModel.find();
