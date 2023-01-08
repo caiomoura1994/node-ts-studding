@@ -9,6 +9,8 @@ To improve development expirience Im using `docker` to create a mongodb containe
 The `mongo db` is be management using `mongoose` and `typeoose`
 
 
+
+
 # Run it
 
 Add `.env` file
